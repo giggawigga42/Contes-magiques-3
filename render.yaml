@@ -1,0 +1,28 @@
+# Render Blueprint for Contes Magiques PWA
+# Deploy with one click at https://dashboard.render.com/blueprints
+
+services:
+  - type: web
+    name: contes-magiques
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: GATEWAY_TOKEN
+        generateValue: false  # You'll set this in Render dashboard
+    healthCheckPath: /api/health
+
+# Optional: Static site for just the PWA (no AI backend)
+# Uncomment below if you want a static version without AI:
+#
+# - type: static
+#   name: contes-magiques-static
+#   buildCommand: ""  # No build needed
+#   staticPublishPath: ./
+#   routes:
+#     - type: rewrite
+#       source: /*
+#       destination: /index.html
