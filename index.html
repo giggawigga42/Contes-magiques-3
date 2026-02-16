@@ -13,22 +13,28 @@
     <div class="app">
         <!-- Header -->
         <header class="header">
-            <h1>🦊 Contes Magiques</h1>
-            <p class="tagline">Histoires magiques générées par IA</p>
+            <h1>🦊 <span data-i18n="title">Contes Magiques</span></h1>
+            <p class="tagline" data-i18n="subtitle">Des histoires enchantées générées par IA</p>
         </header>
+
+        <!-- Language Selector -->
+        <div class="language-bar">
+            <span class="lang-label">🌐</span>
+            <div class="language-selector" id="languageSelector"></div>
+        </div>
 
         <!-- Setup Screen -->
         <div class="screen active" id="setupScreen">
             <div class="card">
-                <h2>🌟 Crée ton histoire</h2>
+                <h2 data-i18n="createStory">🌟 Crée ton histoire</h2>
                 
                 <div class="input-group">
-                    <label>👤 Prénom de l'enfant</label>
+                    <label data-i18n="nameLabel">👤 Prénom de l'enfant</label>
                     <input type="text" id="childName" placeholder="Ex: Emma" maxlength="20">
                 </div>
 
                 <div class="input-group">
-                    <label>🎂 Âge</label>
+                    <label data-i18n="ageLabel">🎂 Âge</label>
                     <div class="age-selector">
                         <button class="age-btn" data-age="2-4">2-4 ans</button>
                         <button class="age-btn selected" data-age="5-7">5-7 ans</button>
@@ -37,47 +43,28 @@
                 </div>
 
                 <div class="input-group">
-                    <label>📏 Longueur</label>
-                    <div class="length-selector">
-                        <button class="length-btn" data-length="courte">Courte</button>
-                        <button class="length-btn selected" data-length="moyenne">Moyenne</button>
-                        <button class="length-btn" data-length="longue">Longue</button>
-                    </div>
+                    <label data-i18n="themeLabel">🎭 Thème</label>
+                    <div class="theme-grid" id="themeGrid"></div>
                 </div>
 
                 <div class="input-group">
-                    <label>🎭 Thème</label>
-                    <div class="theme-grid">
-                        <button class="theme-card" data-theme="animaux">
-                            <span class="theme-icon">🦁</span>
-                            <span class="theme-name">Animaux</span>
-                        </button>
-                        <button class="theme-card" data-theme="espace">
-                            <span class="theme-icon">🚀</span>
-                            <span class="theme-name">Espace</span>
-                        </button>
-                        <button class="theme-card" data-theme="princesses">
-                            <span class="theme-icon">🏰</span>
-                            <span class="theme-name">Princesses</span>
-                        </button>
-                        <button class="theme-card" data-theme="aventure">
-                            <span class="theme-icon">⚔️</span>
-                            <span class="theme-name">Aventure</span>
-                        </button>
-                        <button class="theme-card" data-theme="dragons">
-                            <span class="theme-icon">🐉</span>
-                            <span class="theme-name">Dragons</span>
-                        </button>
-                        <button class="theme-card selected" data-theme="magie">
-                            <span class="theme-icon">✨</span>
-                            <span class="theme-name">Magie</span>
-                        </button>
-                    </div>
+                    <label data-i18n="characterLabel">🧙 Personnage clé</label>
+                    <div class="character-grid" id="characterGrid"></div>
                 </div>
 
-                <button class="generate-btn" id="generateBtn" onclick="generateStory()">
-                    <span class="btn-text">✨ Générer l'histoire</span>
-                    <span class="btn-loader hidden">🪄 Génération en cours...</span>
+                <div class="input-group">
+                    <label data-i18n="locationLabel">📍 Lieu</label>
+                    <div class="location-grid" id="locationGrid"></div>
+                </div>
+
+                <div class="input-group">
+                    <label data-i18n="lengthLabel">📏 Longueur</label>
+                    <div class="length-selector" id="lengthSelector"></div>
+                </div>
+
+                <button class="generate-btn" id="generateBtn">
+                    <span class="btn-text">✨ <span data-i18n="generateBtn">Générer l'histoire</span></span>
+                    <span class="btn-loader hidden">🪄 <span data-i18n="generating">Génération...</span></span>
                 </button>
             </div>
         </div>
@@ -86,14 +73,14 @@
         <div class="screen" id="storyScreen">
             <div class="card story-card">
                 <div class="story-header">
-                    <button class="back-btn" onclick="backToSetup()">← Retour</button>
+                    <button class="back-btn" onclick="backToSetup()">
+                        ← <span data-i18n="back">Retour</span>
+                    </button>
                     <h2 id="storyTitle"></h2>
                 </div>
 
                 <div class="illustration-container">
-                    <div class="illustration-placeholder" id="illustration">
-                        🎨 Génération de l'illustration...
-                    </div>
+                    <div class="illustration-placeholder" id="illustration">🎨</div>
                 </div>
 
                 <div class="story-content" id="storyContent"></div>
@@ -102,13 +89,13 @@
 
                 <div class="story-actions">
                     <button class="action-btn" onclick="speakStory()">
-                        <span id="ttsIcon">🔊</span> Lire
-                    </button>
-                    <button class="action-btn" onclick="generateIllustration()">
-                        🎨 Nouvelle image
+                        🔊 <span data-i18n="read">Lire</span>
                     </button>
                     <button class="action-btn secondary" onclick="saveStory()">
-                        💾 Sauvegarder
+                        💾 <span data-i18n="save">Sauvegarder</span>
+                    </button>
+                    <button class="action-btn secondary" onclick="backToSetup()">
+                        📖 <span data-i18n="newStory">Nouvelle</span>
                     </button>
                 </div>
             </div>
@@ -118,7 +105,7 @@
         <div class="screen" id="loadingScreen">
             <div class="loading-container">
                 <div class="spinner">🪄</div>
-                <p>La magie opère...</p>
+                <p data-i18n="generating">La magie opère...</p>
                 <p class="loading-sub">L'IA imagine votre histoire</p>
             </div>
         </div>
@@ -126,7 +113,7 @@
 
     <!-- Install Prompt -->
     <div class="install-prompt hidden" id="installPrompt">
-        <p>📱 Installer Contes Magiques sur votre téléphone</p>
+        <p>📱 <span data-i18n="title">Contes Magiques</span></p>
         <button onclick="installPWA()">Installer</button>
         <button onclick="dismissInstall()">Plus tard</button>
     </div>
