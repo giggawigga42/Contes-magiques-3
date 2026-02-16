@@ -8,9 +8,9 @@ const fetch = require('node-fetch');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Your OpenClaw gateway configuration
-const OPENCLAW_GATEWAY = process.env.OPENCLAW_GATEWAY || 'http://localhost:8080';
-const GATEWAY_TOKEN = process.env.GATEWAY_TOKEN || 'your-gateway-token-here';
+// Synthetic AI API configuration
+const SYNTHETIC_API_URL = process.env.SYNTHETIC_API_URL || 'https://api.synthetic.ai/v1/chat/completions';
+const SYNTHETIC_API_KEY = process.env.SYNTHETIC_API_KEY || '';
 
 // Middleware
 app.use(cors()); // Allow PWA to call this server
@@ -30,13 +30,14 @@ app.post('/api/generate-story', async (req, res) => {
         const { model, messages, max_tokens, temperature } = req.body;
         
         console.log('Generating story with model:', model);
+        console.log('Calling API URL:', SYNTHETIC_API_URL);
         
-        // Call Synthetic AI API through OpenClaw gateway
-        const response = await fetch(`${OPENCLAW_GATEWAY}/v1/chat/completions`, {
+        // Call Synthetic AI API directly
+        const response = await fetch(SYNTHETIC_API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${GATEWAY_TOKEN}`
+                'Authorization': `Bearer ${SYNTHETIC_API_KEY}`
             },
             body: JSON.stringify({
                 model: model,
@@ -46,18 +47,27 @@ app.post('/api/generate-story', async (req, res) => {
             })
         });
         
+        const status = response.status;
+        const responseText = await response.text();
+        
+        console.log('API response status:', status);
+        console.log('API response body:', responseText);
+        
         if (!response.ok) {
-            const error = await response.text();
-            console.error('Synthetic AI API error:', error);
-            return res.status(500).json({ error: 'AI generation failed' });
+            console.error('Synthetic AI API error:', responseText);
+            return res.status(status).json({ 
+                error: 'AI generation failed',
+                details: responseText,
+                status: status
+            });
         }
         
-        const data = await response.json();
+        const data = JSON.parse(responseText);
         res.json(data);
         
     } catch (error) {
         console.error('Server error:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal server error', message: error.message });
     }
 });
 
